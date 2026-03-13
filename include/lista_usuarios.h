@@ -2,24 +2,18 @@
 #define LISTA_USUARIOS_H
 
 typedef struct Usuario {
-
     int id;
     char nome[100];
-
 } Usuario;
 
 typedef struct NoUsuario {
-
     Usuario usuario;
     struct NoUsuario* proximo;
-
 } NoUsuario;
 
 typedef struct ListaUsuarios {
-
     NoUsuario* cabeca;
     int tamanho;
-    
 } ListaUsuarios;
 
 void inicializar_lista_usuarios(ListaUsuarios* lista);
