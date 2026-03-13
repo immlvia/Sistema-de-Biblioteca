@@ -16,6 +16,7 @@ int gerarProximoId(ListaLivros *lista) {
 
         atual = atual->proximo;
     }
+}
 // Inicializa a lista
 void inicializar_lista_livros(ListaLivros* lista) {
     lista->cabeca = NULL;
