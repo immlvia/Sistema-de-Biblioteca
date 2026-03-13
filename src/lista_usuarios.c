@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../include/lista_usuarios.h"
+
+void inicializar_lista_usuarios(ListaUsuarios* lista) {
+    if (lista != NULL) {
+        lista->cabeca = NULL;
+        lista->tamanho = 0;
+    }
+}
+
+void inserir_usuario(ListaUsuarios* lista, Usuario usuario) {
+    NoUsuario* novo = (NoUsuario*)malloc(sizeof(NoUsuario));
+    if (novo == NULL) return;
+
+    novo->usuario = usuario;
+    novo->proximo = lista->cabeca;
+    lista->cabeca = novo;
+    lista->tamanho++;
+}
+
+int remover_usuario(ListaUsuarios* lista, int id) {
+    NoUsuario* atual = lista->cabeca;
+    NoUsuario* anterior = NULL;
+
+    while (atual != NULL && atual->usuario.id != id) {
+        anterior = atual;
+        atual = atual->proximo;
+    }
+
+    if (atual == NULL) return 0;
+
+    if (anterior == NULL) {
+        lista->cabeca = atual->proximo;
+    } else {
+        anterior->proximo = atual->proximo;
+    }
+
+    free(atual);
+    lista->tamanho--;
+    return 1;
+}
+
+Usuario* buscar_usuario_por_id(ListaUsuarios* lista, int id) {
+    NoUsuario* atual = lista->cabeca;
+
+    while (atual != NULL) {
+        if (atual->usuario.id == id) {
+            return &(atual->usuario);
+        }
+        atual = atual->proximo;
+    }
+
+    return NULL;
+}
+
+Usuario* buscar_usuario_por_nome(ListaUsuarios* lista, const char* nome) {
+    NoUsuario* atual = lista->cabeca;
+
+    while (atual != NULL) {
+        if (strcmp(atual->usuario.nome, nome) == 0) {
+            return &(atual->usuario);
+        }
+        atual = atual->proximo;
+    }
+
+    return NULL;
+}
+
+void listar_usuarios(ListaUsuarios* lista) {
+    NoUsuario* atual = lista->cabeca;
+
+    if (atual == NULL) {
+        printf("Nenhum usuario cadastrado.\n");
+        return;
+    }
+
+    while (atual != NULL) {
+        printf("ID: %d | Nome: %s\n", atual->usuario.id, atual->usuario.nome);
+        atual = atual->proximo;
+    }
+}
+
+void destruir_lista_usuarios(ListaUsuarios* lista) {
+    if (lista == NULL) return;
+
+    NoUsuario* atual = lista->cabeca;
+    NoUsuario* proximo;
+
+    while (atual != NULL) {
+        proximo = atual->proximo;
+        free(atual);
+        atual = proximo;
+    }
+
+    lista->cabeca = NULL;
+    lista->tamanho = 0;
+}
+
+void salvar_usuarios(ListaUsuarios* lista, const char* arquivo) {
+    FILE* f = fopen(arquivo, "wb");
+    if (f == NULL) return;
+
+    NoUsuario* atual = lista->cabeca;
+    while (atual != NULL) {
+        fwrite(&(atual->usuario), sizeof(Usuario), 1, f);
+        atual = atual->proximo;
+    }
+
+    fclose(f);
+}
+
+void carregar_usuarios(ListaUsuarios* lista, const char* arquivo) {
+    FILE* f = fopen(arquivo, "rb");
+    if (f == NULL) return;
+
+    Usuario u;
+    while (fread(&u, sizeof(Usuario), 1, f) == 1) {
+        NoUsuario* novo = (NoUsuario*)malloc(sizeof(NoUsuario));
+        if (novo != NULL) {
+            novo->usuario = u;
+            novo->proximo = lista->cabeca;
+            lista->cabeca = novo;
+            lista->tamanho++;
+        }
+    }
+
+    fclose(f);
+}
