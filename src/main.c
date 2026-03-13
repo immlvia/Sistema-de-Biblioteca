@@ -69,6 +69,85 @@ do{
 
 void menuUsuario(usuarios){
 
+    int opcao;
+    
+    do {
+        printf("\n===== MENU USUARIOS =====\n");
+        printf("1 - Cadastrar usuario\n");
+        printf("2 - Listar usuarios\n");
+        printf("3 - Buscar usuario por ID\n");
+        printf("4 - Buscar usuario por nome\n");
+        printf("5 - Remover usuario\n");
+        printf("0 - Voltar\n");
+        printf("Digite a opção desejada\n");
+        scanf("%d", &opcao);
+
+        switch(opcao) {
+            case 1: {
+                Usuario novoUsuario;
+                printf("Digite o ID do usuario: ");
+                scanf("%d", &novoUsuario.id);
+                
+                printf("Digite o nome do usuario: ");
+                scanf(" %[^\n]", novoUsuario.nome); 
+                
+                inserir_usuario(lista, novoUsuario);
+                break;
+            }
+            case 2:
+                printf("\n--- Lista de Usuarios ---\n");
+                listar_usuarios(lista);
+                break;
+                
+            case 3: {
+                int idBusca;
+                printf("Digite o ID do usuario: ");
+                scanf("%d", &idBusca);
+                
+                Usuario *encontrado = buscar_usuario_por_id(lista, idBusca);
+                if (encontrado != NULL) {
+                    printf("\nUsuario encontrado!\n");
+                    printf("ID: %d | Nome: %s\n", encontrado->id, encontrado->nome);
+                } else {
+                    printf("\nErro: Usuario com ID %d nao encontrado.\n", idBusca);
+                }
+                break;
+            }
+            case 4: {
+                char nomeBusca[100];
+                printf("Digite o nome do usuario: ");
+                scanf(" %[^\n]", nomeBusca);
+                
+                Usuario *encontrado = buscar_usuario_por_nome(lista, nomeBusca);
+                if (encontrado != NULL) {
+                    printf("\nUsuario encontrado!\n");
+                    printf("ID: %d | Nome: %s\n", encontrado->id, encontrado->nome);
+                } else {
+                    printf("\nErro: Usuario com nome '%s' nao encontrado.\n", nomeBusca);
+                }
+                break;
+            }
+            case 5: {
+                int idRemover;
+                printf("Digite o ID do usuario a ser removido: ");
+                scanf("%d", &idRemover);
+                
+                if (remover_usuario(lista, idRemover)) {
+                    printf("Usuario removido com sucesso!\n");
+                } else {
+                    printf("Erro: Usuario com ID %d nao encontrado.\n", idRemover);
+                }
+                break;
+            }
+            case 0:
+                printf("\nA voltar ao menu principal...\n");
+                break;
+                
+            default:
+                printf("\nOpcao invalida! Tente novamente.\n");
+        }
+    } while (opcao != 0);
+
 };
 void menuEmprestimos(livros,usuarios,emprestimos){
 
