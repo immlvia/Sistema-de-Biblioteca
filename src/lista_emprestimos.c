@@ -4,7 +4,7 @@
 #include "../include/lista_emprestimos.h"
 
 // Inicializa a lista
-void inicializar_lista_emprestimos(ListaEmprestimos* lista) {
+void inicializar_lista_emprestimos(ListaEmprestimos* lista){
     lista->cabeca = NULL;
     lista->tamanho = 0;
 }

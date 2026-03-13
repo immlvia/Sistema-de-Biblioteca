@@ -31,5 +31,6 @@ void listar_livros(ListaLivros* lista);
 int atualizar_disponibilidade(ListaLivros* lista, int id, int disponivel);
 void destruir_lista_livros(ListaLivros* lista);
 void salvar_livros(ListaLivros* lista, const char* arquivo);
+int gerarProximoId(ListaLivros *lista);
 void carregar_livros(ListaLivros* lista, const char* arquivo);
 #endif 

@@ -2,7 +2,10 @@
 #include "../include/lista_livros.h"
 #include "../include/lista_usuarios.h"
 #include "../include/lista_emprestimos.h"
-void menuLivros(livro){
+
+
+Livro l;
+void menuLivros(ListaLivros *lista){
     int opcao;
     int id=0;
 do{
@@ -21,7 +24,7 @@ do{
         l.id = gerarProximoId(lista);
 
         printf("Titulo: ");
-        scanf(" %[^\n]", l.nome);
+        scanf(" %[^\n]", l.titulo);
 
         printf("Autor: ");
         scanf(" %[^\n]", l.autor);
@@ -31,26 +34,29 @@ do{
 
         printf("Ano: ");
         scanf("%d", &l.ano);
-        
+        l.disponivel = 1;
+
+        inserir_livro(lista, l);
+
         break;
     case 2:
-        listarLivros(lista);
+        listar_livros(lista);
         break;
         
-    case 3:
+    case 3:{
          int id;
 
          printf("Digite o ID do livro: ");
          scanf("%d", &id);
 
-         Livro *l = buscarLivro(lista, id);
+         Livro *l = buscar_livro_por_id(lista, id);
 
         if (l)
             printf("Livro: %s (%d)\n", l->titulo, l->ano);
         else
              printf("Livro nao encontrado\n");
 
-        break;
+        break;}
 
     case 4:
         int id;
@@ -58,7 +64,7 @@ do{
         printf("ID do livro para remover: ");
         scanf("%d", &id);
 
-        removerLivro(lista, id);
+        remover_livro(lista, id);
         break;
 
     
@@ -67,7 +73,8 @@ do{
 
 };
 
-void menuUsuario(usuarios){
+void menuUsuario(ListaUsuarios *lista)
+{
 
     int opcao;
     
@@ -149,13 +156,19 @@ void menuUsuario(usuarios){
     } while (opcao != 0);
 
 };
-void menuEmprestimos(livros,usuarios,emprestimos){
+void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmprestimos *emprestimos)
+{
 
 };
 int main() {
-    ListaLivros *livros = inicializarListaLivros();
-    ListaUsuarios *usuarios = inicializarListaUsuarios();
-    ListaEmprestimos *emprestimos = inicializarListaEmprestimos(); 
+    ListaLivros livros;
+    ListaUsuarios usuarios;
+    ListaEmprestimos emprestimos;
+
+    inicializar_lista_livros(&livros);
+    inicializar_lista_usuarios(&usuarios);
+    inicializar_lista_emprestimos(&emprestimos);
+
     int opcao;
 
     do{ 
@@ -169,13 +182,13 @@ int main() {
         switch (opcao)
         {
         case 1:
-            menuLivros(livros);
+            menuLivros(&livros);
             break;
         case 2:
-            menuUsuarios(usuarios);
+            menuUsuario(&usuarios);
             break;
         case 3:
-            menuEmprestimos(livros,usuarios,emprestimos);
+            menuEmprestimos(&livros,&usuarios,&emprestimos);
             break;
         default:
             break;

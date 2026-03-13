@@ -12,10 +12,11 @@ int gerarProximoId(ListaLivros *lista) {
     while (atual != NULL) {
 
         if (atual->livro.id > maiorId)
-            maiorId = atual->livro.id;
+        maiorId = atual->livro.id;
 
         atual = atual->proximo;
     }
+    return maiorId + 1;
 }
 // Inicializa a lista
 void inicializar_lista_livros(ListaLivros* lista) {
