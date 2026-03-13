@@ -3,6 +3,19 @@
 #include <string.h>
 #include "../include/lista_livros.h"
 
+// Gerar id do livro
+int gerarProximoId(ListaLivros *lista) {
+
+    NoLivro *atual = lista->cabeca;
+    int maiorId = 0;
+
+    while (atual != NULL) {
+
+        if (atual->livro.id > maiorId)
+            maiorId = atual->livro.id;
+
+        atual = atual->proximo;
+    }
 // Inicializa a lista
 void inicializar_lista_livros(ListaLivros* lista) {
     lista->cabeca = NULL;
