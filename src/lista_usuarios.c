@@ -3,6 +3,21 @@
 #include <string.h>
 #include "../include/lista_usuarios.h"
 
+
+int gerarProximoIdUsuario(ListaUsuarios* lista) {
+    int maiorId = 0;
+    NoUsuario* atual = lista->cabeca;
+
+    while (atual != NULL) {
+        if (atual->usuario.id > maiorId) {
+            maiorId = atual->usuario.id;
+        }
+        atual = atual->proximo;
+    }
+
+    return maiorId + 1;
+}
+
 void inicializar_lista_usuarios(ListaUsuarios* lista) {
     if (lista != NULL) {
         lista->cabeca = NULL;
@@ -76,10 +91,14 @@ void listar_usuarios(ListaUsuarios* lista) {
         return;
     }
 
+    printf("\n===== LISTA DE USUARIOS (%d) =====\n", lista->tamanho);
     while (atual != NULL) {
-        printf("ID: %d | Nome: %s\n", atual->usuario.id, atual->usuario.nome);
+        printf("---------------------------\n");
+        printf("ID   : %d\n", atual->usuario.id);
+        printf("Nome : %s\n", atual->usuario.nome);
         atual = atual->proximo;
     }
+    printf("===================================\n\n");
 }
 
 void destruir_lista_usuarios(ListaUsuarios* lista) {

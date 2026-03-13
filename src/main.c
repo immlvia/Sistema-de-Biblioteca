@@ -15,7 +15,7 @@ do{
     printf("3 - Buscar livro\n");
     printf("4 - Remover livro\n");
     printf("0 - Voltar\n");
-    printf("Digite a opção desejada\n");
+    printf("Digite a opção desejada: \n");
     scanf("%d", &opcao);
 
     switch (opcao)
@@ -92,20 +92,20 @@ void menuUsuario(ListaUsuarios *lista)
         switch(opcao) {
             case 1: {
                 Usuario novoUsuario;
-                printf("Digite o ID do usuario: ");
-                scanf("%d", &novoUsuario.id);
-                
+                novoUsuario.id = gerarProximoIdUsuario(lista);  
+
                 printf("Digite o nome do usuario: ");
-                scanf(" %[^\n]", novoUsuario.nome); 
-                
+                scanf(" %[^\n]", novoUsuario.nome);
+
                 inserir_usuario(lista, novoUsuario);
+                printf("Usuario cadastrado com ID %d!\n", novoUsuario.id);
                 break;
             }
-            case 2:
+            case 2: {
                 printf("\n--- Lista de Usuarios ---\n");
                 listar_usuarios(lista);
                 break;
-                
+            }
             case 3: {
                 int idBusca;
                 printf("Digite o ID do usuario: ");

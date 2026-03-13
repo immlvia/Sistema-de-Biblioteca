@@ -16,6 +16,7 @@ typedef struct ListaUsuarios {
     int tamanho;
 } ListaUsuarios;
 
+int gerarProximoIdUsuario(ListaUsuarios* lista);
 void inicializar_lista_usuarios(ListaUsuarios* lista);
 void inserir_usuario(ListaUsuarios* lista, Usuario usuario);
 int remover_usuario(ListaUsuarios* lista, int id);
