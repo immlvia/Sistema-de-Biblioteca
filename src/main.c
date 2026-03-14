@@ -1,83 +1,105 @@
 #include <stdio.h>
+#include <sys/stat.h>
 #include "../include/lista_livros.h"
 #include "../include/lista_usuarios.h"
 #include "../include/lista_emprestimos.h"
 
+void limparBuffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
 
-Livro l;
-void menuLivros(ListaLivros *lista){
-    int opcao;
-    int id=0;
-do{
-    printf("\n===== MENU LIVROS =====\n");
-    printf("1 - Cadastrar livro\n");
-    printf("2 - Listar livros\n");
-    printf("3 - Buscar livro\n");
-    printf("4 - Remover livro\n");
-    printf("0 - Voltar\n");
-    printf("Digite a opção desejada: \n");
-    scanf("%d", &opcao);
-
-    switch (opcao)
-    {
-    case 1:
-        l.id = gerarProximoId(lista);
-
-        printf("Titulo: ");
-        scanf(" %[^\n]", l.titulo);
-
-        printf("Autor: ");
-        scanf(" %[^\n]", l.autor);
-
-        printf("Paginas: ");
-        scanf("%d", &l.paginas);
-
-        printf("Ano: ");
-        scanf("%d", &l.ano);
-        l.disponivel = 1;
-
-        inserir_livro(lista, l);
-
-        break;
-    case 2:
-        listar_livros(lista);
-        break;
-        
-    case 3:{
-         int id;
-
-         printf("Digite o ID do livro: ");
-         scanf("%d", &id);
-
-         Livro *l = buscar_livro_por_id(lista, id);
-
-        if (l)
-            printf("Livro: %s (%d)\n", l->titulo, l->ano);
-        else
-             printf("Livro nao encontrado\n");
-
-        break;}
-
-    case 4:
-        int id;
-
-        printf("ID do livro para remover: ");
-        scanf("%d", &id);
-
-        remover_livro(lista, id);
-        break;
-
-    
+int lerInteiro(const char *mensagem) {
+    int valor;
+    while (1) {
+        printf("%s", mensagem);
+        if (scanf("%d", &valor) == 1) {
+            limparBuffer();
+            return valor;
+        }
+        printf("Entrada invalida! Digite um numero.\n");
+        limparBuffer();
     }
-}while(opcao != 0);
+}
 
-};
 
-void menuUsuario(ListaUsuarios *lista)
-{
+void garantirPastaData() {
+    struct stat st = {0};
+    if (stat("data", &st) == -1) {
+        mkdir("data", 0700);
+    }
+}
 
+void menuLivros(ListaLivros *lista) {
     int opcao;
-    
+
+    do {
+        printf("\n===== MENU LIVROS =====\n");
+        printf("1 - Cadastrar livro\n");
+        printf("2 - Listar livros\n");
+        printf("3 - Buscar livro por ID\n");
+        printf("4 - Remover livro\n");
+        printf("0 - Voltar\n");
+        opcao = lerInteiro("Digite a opcao desejada: ");
+
+        switch (opcao) {
+            case 1: {
+                Livro l;
+                l.id = gerarProximoId(lista);
+
+                printf("Titulo: ");
+                scanf(" %[^\n]", l.titulo);
+
+                printf("Autor: ");
+                scanf(" %[^\n]", l.autor);
+
+                l.paginas    = lerInteiro("Paginas: ");
+                l.ano        = lerInteiro("Ano: ");
+                l.disponivel = 1;
+
+                inserir_livro(lista, l);
+                break;
+            }
+            case 2:
+                listar_livros(lista);
+                break;
+
+            case 3: {
+                int id = lerInteiro("Digite o ID do livro: ");
+
+                Livro *encontrado = buscar_livro_por_id(lista, id);
+                if (encontrado != NULL) {
+                    printf("\n---------------------------\n");
+                    printf("ID       : %d\n", encontrado->id);
+                    printf("Titulo   : %s\n", encontrado->titulo);
+                    printf("Autor    : %s\n", encontrado->autor);
+                    printf("Ano      : %d\n", encontrado->ano);
+                    printf("Paginas  : %d\n", encontrado->paginas);
+                    printf("Status   : %s\n", encontrado->disponivel ? "Disponivel" : "Emprestado");
+                    printf("---------------------------\n");
+                } else {
+                    printf("Livro com ID %d nao encontrado!\n", id);
+                }
+                break;
+            }
+            case 4: {
+                int id = lerInteiro("ID do livro para remover: ");
+                remover_livro(lista, id);
+                break;
+            }
+            case 0:
+                printf("Voltando ao menu principal...\n");
+                break;
+
+            default:
+                printf("Opcao invalida! Tente novamente.\n");
+        }
+    } while (opcao != 0);
+}
+
+void menuUsuario(ListaUsuarios *lista) {
+    int opcao;
+
     do {
         printf("\n===== MENU USUARIOS =====\n");
         printf("1 - Cadastrar usuario\n");
@@ -86,81 +108,168 @@ void menuUsuario(ListaUsuarios *lista)
         printf("4 - Buscar usuario por nome\n");
         printf("5 - Remover usuario\n");
         printf("0 - Voltar\n");
-        printf("Digite a opção desejada\n");
-        scanf("%d", &opcao);
+        opcao = lerInteiro("Digite a opcao desejada: ");
 
-        switch(opcao) {
+        switch (opcao) {
             case 1: {
                 Usuario novoUsuario;
-                novoUsuario.id = gerarProximoIdUsuario(lista);  
+                novoUsuario.id = gerarProximoIdUsuario(lista);
 
-                printf("Digite o nome do usuario: ");
+                printf("Nome: ");
                 scanf(" %[^\n]", novoUsuario.nome);
 
                 inserir_usuario(lista, novoUsuario);
                 printf("Usuario cadastrado com ID %d!\n", novoUsuario.id);
                 break;
             }
-            case 2: {
-                printf("\n--- Lista de Usuarios ---\n");
+            case 2:
                 listar_usuarios(lista);
                 break;
-            }
+
             case 3: {
-                int idBusca;
-                printf("Digite o ID do usuario: ");
-                scanf("%d", &idBusca);
-                
-                Usuario *encontrado = buscar_usuario_por_id(lista, idBusca);
+                int id = lerInteiro("Digite o ID do usuario: ");
+
+                Usuario *encontrado = buscar_usuario_por_id(lista, id);
                 if (encontrado != NULL) {
-                    printf("\nUsuario encontrado!\n");
-                    printf("ID: %d | Nome: %s\n", encontrado->id, encontrado->nome);
+                    printf("\n---------------------------\n");
+                    printf("ID   : %d\n", encontrado->id);
+                    printf("Nome : %s\n", encontrado->nome);
+                    printf("---------------------------\n");
                 } else {
-                    printf("\nErro: Usuario com ID %d nao encontrado.\n", idBusca);
+                    printf("Usuario com ID %d nao encontrado!\n", id);
                 }
                 break;
             }
             case 4: {
-                char nomeBusca[100];
+                char nome[100];
                 printf("Digite o nome do usuario: ");
-                scanf(" %[^\n]", nomeBusca);
-                
-                Usuario *encontrado = buscar_usuario_por_nome(lista, nomeBusca);
+                scanf(" %[^\n]", nome);
+
+                Usuario *encontrado = buscar_usuario_por_nome(lista, nome);
                 if (encontrado != NULL) {
-                    printf("\nUsuario encontrado!\n");
-                    printf("ID: %d | Nome: %s\n", encontrado->id, encontrado->nome);
+                    printf("\n---------------------------\n");
+                    printf("ID   : %d\n", encontrado->id);
+                    printf("Nome : %s\n", encontrado->nome);
+                    printf("---------------------------\n");
                 } else {
-                    printf("\nErro: Usuario com nome '%s' nao encontrado.\n", nomeBusca);
+                    printf("Usuario '%s' nao encontrado!\n", nome);
                 }
                 break;
             }
             case 5: {
-                int idRemover;
-                printf("Digite o ID do usuario a ser removido: ");
-                scanf("%d", &idRemover);
-                
-                if (remover_usuario(lista, idRemover)) {
-                    printf("Usuario removido com sucesso!\n");
+                int id = lerInteiro("ID do usuario para remover: ");
+                remover_usuario(lista, id);
+                break;
+            }
+            case 0:
+                printf("Voltando ao menu principal...\n");
+                break;
+
+            default:
+                printf("Opcao invalida! Tente novamente.\n");
+        }
+    } while (opcao != 0);
+}
+
+void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmprestimos *emprestimos) {
+    int opcao;
+
+    do {
+        printf("\n===== MENU EMPRESTIMOS =====\n");
+        printf("1 - Registrar emprestimo\n");
+        printf("2 - Devolver livro\n");
+        printf("3 - Listar emprestimos\n");
+        printf("4 - Buscar emprestimo por ID\n");
+        printf("0 - Voltar\n");
+        opcao = lerInteiro("Digite a opcao desejada: ");
+
+        switch (opcao) {
+            case 1: {
+                Emprestimo novo;
+
+                novo.id_livro = lerInteiro("ID do livro: ");
+                Livro *livro = buscar_livro_por_id(livros, novo.id_livro);
+                if (livro == NULL) {
+                    printf("Erro: Livro com ID %d nao encontrado!\n", novo.id_livro);
+                    break;
+                }
+                if (livro->disponivel == 0) {
+                    printf("Erro: Livro '%s' ja esta emprestado!\n", livro->titulo);
+                    break;
+                }
+
+                novo.id_usuario = lerInteiro("ID do usuario: ");
+                Usuario *usuario = buscar_usuario_por_id(usuarios, novo.id_usuario);
+                if (usuario == NULL) {
+                    printf("Erro: Usuario com ID %d nao encontrado!\n", novo.id_usuario);
+                    break;
+                }
+
+                printf("Data de emprestimo (DD/MM/AAAA): ");
+                scanf(" %[^\n]", novo.data_emprestimo);
+
+                printf("Data de devolucao (DD/MM/AAAA): ");
+                scanf(" %[^\n]", novo.data_devolucao);
+
+                novo.id = gerarProximoIdEmprestimo(emprestimos);
+
+                inserir_emprestimo(emprestimos, novo);
+                atualizar_disponibilidade(livros, novo.id_livro, 0);
+
+                printf("Emprestimo registrado! '%s' emprestado para '%s'.\n",
+                    livro->titulo, usuario->nome);
+                break;
+            }
+            case 2: {
+                int id = lerInteiro("ID do emprestimo para devolver: ");
+
+                Emprestimo *emp = buscar_emprestimo_por_id(emprestimos, id);
+                if (emp == NULL) {
+                    printf("Erro: Emprestimo com ID %d nao encontrado!\n", id);
+                    break;
+                }
+
+                int idLivro = emp->id_livro;
+                remover_emprestimo(emprestimos, id);
+                atualizar_disponibilidade(livros, idLivro, 1);
+
+                printf("Livro devolvido com sucesso!\n");
+                break;
+            }
+            case 3:
+                listar_emprestimos(emprestimos);
+                break;
+
+            case 4: {
+                int id = lerInteiro("ID do emprestimo: ");
+
+                Emprestimo *emp = buscar_emprestimo_por_id(emprestimos, id);
+                if (emp != NULL) {
+                    printf("\n---------------------------\n");
+                    printf("ID           : %d\n", emp->id);
+                    printf("ID Livro     : %d\n", emp->id_livro);
+                    printf("ID Usuario   : %d\n", emp->id_usuario);
+                    printf("Emprestimo   : %s\n", emp->data_emprestimo);
+                    printf("Devolucao    : %s\n", emp->data_devolucao);
+                    printf("---------------------------\n");
                 } else {
-                    printf("Erro: Usuario com ID %d nao encontrado.\n", idRemover);
+                    printf("Emprestimo com ID %d nao encontrado!\n", id);
                 }
                 break;
             }
             case 0:
-                printf("\nA voltar ao menu principal...\n");
+                printf("Voltando ao menu principal...\n");
                 break;
-                
+
             default:
-                printf("\nOpcao invalida! Tente novamente.\n");
+                printf("Opcao invalida! Tente novamente.\n");
         }
     } while (opcao != 0);
+}
 
-};
-void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmprestimos *emprestimos)
-{
-
-};
 int main() {
+    garantirPastaData();
+
     ListaLivros livros;
     ListaUsuarios usuarios;
     ListaEmprestimos emprestimos;
@@ -169,33 +278,45 @@ int main() {
     inicializar_lista_usuarios(&usuarios);
     inicializar_lista_emprestimos(&emprestimos);
 
+    carregar_livros(&livros, "data/livros.txt");
+    carregar_usuarios(&usuarios, "data/usuarios.txt");
+    carregar_emprestimos(&emprestimos, "data/emprestimos.txt");
+
     int opcao;
 
-    do{ 
-        printf("===== SISTEMA DE BIBLIOTECA =====\n");
+    do {
+        printf("\n===== SISTEMA DE BIBLIOTECA =====\n");
         printf("1 - Livros\n");
         printf("2 - Usuarios\n");
         printf("3 - Emprestimos\n");
         printf("0 - Sair\n");
-        printf("Digite a opção desejada\n");
-        scanf("%d",&opcao);
-        switch (opcao)
-        {
-        case 1:
-            menuLivros(&livros);
-            break;
-        case 2:
-            menuUsuario(&usuarios);
-            break;
-        case 3:
-            menuEmprestimos(&livros,&usuarios,&emprestimos);
-            break;
-        default:
-            break;
+        opcao = lerInteiro("Digite a opcao desejada: ");
+
+        switch (opcao) {
+            case 1:
+                menuLivros(&livros);
+                break;
+            case 2:
+                menuUsuario(&usuarios);
+                break;
+            case 3:
+                menuEmprestimos(&livros, &usuarios, &emprestimos);
+                break;
+            case 0:
+                printf("Encerrando o sistema...\n");
+                break;
+            default:
+                printf("Opcao invalida! Tente novamente.\n");
         }
+    } while (opcao != 0);
 
+    salvar_livros(&livros, "data/livros.txt");
+    salvar_usuarios(&usuarios, "data/usuarios.txt");
+    salvar_emprestimos(&emprestimos, "data/emprestimos.txt");
 
-    }while(opcao != 0);
+    destruir_lista_livros(&livros);
+    destruir_lista_usuarios(&usuarios);
+    destruir_lista_emprestimos(&emprestimos);
+
+    return 0;
 }
-
-   

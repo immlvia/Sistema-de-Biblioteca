@@ -19,6 +19,7 @@ typedef struct ListaEmprestimos {
     int tamanho;
 } ListaEmprestimos;
 
+int gerarProximoIdEmprestimo(ListaEmprestimos* lista);
 void inicializar_lista_emprestimos(ListaEmprestimos* lista);
 void inserir_emprestimo(ListaEmprestimos* lista, Emprestimo emprestimo);
 int remover_emprestimo(ListaEmprestimos* lista, int id);

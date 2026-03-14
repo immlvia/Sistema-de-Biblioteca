@@ -3,6 +3,17 @@
 #include <string.h>
 #include "../include/lista_emprestimos.h"
 
+int gerarProximoIdEmprestimo(ListaEmprestimos* lista) {
+    int maiorId = 0;
+    NoEmprestimo* atual = lista->cabeca;
+    while (atual != NULL) {
+        if (atual->emprestimo.id > maiorId)
+            maiorId = atual->emprestimo.id;
+        atual = atual->proximo;
+    }
+    return maiorId + 1;
+}
+
 // Inicializa a lista
 void inicializar_lista_emprestimos(ListaEmprestimos* lista){
     lista->cabeca = NULL;

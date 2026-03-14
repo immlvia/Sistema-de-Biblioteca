@@ -118,32 +118,34 @@ void destruir_lista_usuarios(ListaUsuarios* lista) {
 }
 
 void salvar_usuarios(ListaUsuarios* lista, const char* arquivo) {
-    FILE* f = fopen(arquivo, "wb");
+    FILE* f = fopen(arquivo, "w");
     if (f == NULL) return;
 
     NoUsuario* atual = lista->cabeca;
     while (atual != NULL) {
-        fwrite(&(atual->usuario), sizeof(Usuario), 1, f);
+        fprintf(f, "%d|%s\n",
+            atual->usuario.id,
+            atual->usuario.nome
+        );
         atual = atual->proximo;
     }
 
     fclose(f);
+    printf("Usuarios salvos em '%s' com sucesso!\n", arquivo);
 }
 
 void carregar_usuarios(ListaUsuarios* lista, const char* arquivo) {
-    FILE* f = fopen(arquivo, "rb");
-    if (f == NULL) return;
+    FILE* f = fopen(arquivo, "r");
+    if (f == NULL) {
+        printf("Arquivo '%s' nao encontrado. Iniciando lista vazia.\n", arquivo);
+        return;
+    }
 
     Usuario u;
-    while (fread(&u, sizeof(Usuario), 1, f) == 1) {
-        NoUsuario* novo = (NoUsuario*)malloc(sizeof(NoUsuario));
-        if (novo != NULL) {
-            novo->usuario = u;
-            novo->proximo = lista->cabeca;
-            lista->cabeca = novo;
-            lista->tamanho++;
-        }
+    while (fscanf(f, "%d|%99[^\n]\n", &u.id, u.nome) == 2) {
+        inserir_usuario(lista, u);
     }
 
     fclose(f);
+    printf("Usuarios carregados de '%s' com sucesso!\n", arquivo);
 }
