@@ -44,7 +44,10 @@ int remover_usuario(ListaUsuarios* lista, int id) {
         atual = atual->proximo;
     }
 
-    if (atual == NULL) return 0;
+    if (atual == NULL) {
+        printf("Usuário com ID %d não encontrado!\n", id); 
+        return 0;
+    }
 
     if (anterior == NULL) {
         lista->cabeca = atual->proximo;
@@ -54,6 +57,7 @@ int remover_usuario(ListaUsuarios* lista, int id) {
 
     free(atual);
     lista->tamanho--;
+    printf("Usuário removido com sucesso!\n"); // ← aqui
     return 1;
 }
 
@@ -87,15 +91,15 @@ void listar_usuarios(ListaUsuarios* lista) {
     NoUsuario* atual = lista->cabeca;
 
     if (atual == NULL) {
-        printf("Nenhum usuario cadastrado.\n");
+        printf("Nenhum usuário cadastrado.\n");
         return;
     }
 
-    printf("\n===== LISTA DE USUARIOS (%d) =====\n", lista->tamanho);
+    printf("\n===== LISTA DE USUÁRIOS (%d) =====\n", lista->tamanho);
     while (atual != NULL) {
         printf("---------------------------\n");
-        printf("ID   : %d\n", atual->usuario.id);
-        printf("Nome : %s\n", atual->usuario.nome);
+        printf("ID: %d\n", atual->usuario.id);
+        printf("Nome: %s\n", atual->usuario.nome);
         atual = atual->proximo;
     }
     printf("===================================\n\n");
@@ -131,13 +135,13 @@ void salvar_usuarios(ListaUsuarios* lista, const char* arquivo) {
     }
 
     fclose(f);
-    printf("Usuarios salvos em '%s' com sucesso!\n", arquivo);
+    printf("Usuários salvos em '%s' com sucesso!\n", arquivo);
 }
 
 void carregar_usuarios(ListaUsuarios* lista, const char* arquivo) {
     FILE* f = fopen(arquivo, "r");
     if (f == NULL) {
-        printf("Arquivo '%s' nao encontrado. Iniciando lista vazia.\n", arquivo);
+        printf("Arquivo '%s' não encontrado. Iniciando lista vazia.\n", arquivo);
         return;
     }
 
@@ -147,5 +151,5 @@ void carregar_usuarios(ListaUsuarios* lista, const char* arquivo) {
     }
 
     fclose(f);
-    printf("Usuarios carregados de '%s' com sucesso!\n", arquivo);
+    printf("Usuários carregados de '%s' com sucesso!\n", arquivo);
 }

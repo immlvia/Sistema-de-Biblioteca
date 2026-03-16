@@ -28,7 +28,7 @@ void inicializar_lista_livros(ListaLivros* lista) {
 void inserir_livro(ListaLivros* lista, Livro livro) {
     NoLivro* novo = (NoLivro*) malloc(sizeof(NoLivro));
     if (novo == NULL) {
-        printf("Erro: memoria insuficiente!\n");
+        printf("Erro: memória insuficiente!\n");
         return;
     }
 
@@ -36,8 +36,6 @@ void inserir_livro(ListaLivros* lista, Livro livro) {
     novo->proximo = lista->cabeca;
     lista->cabeca = novo;
     lista->tamanho++;
-
-    printf("Livro '%s' cadastrado com sucesso!\n", livro.titulo);
 }
 
 // Remove um livro pelo ID
@@ -62,7 +60,7 @@ int remover_livro(ListaLivros* lista, int id) {
         atual = atual->proximo;
     }
 
-    printf("Livro com ID %d nao encontrado!\n", id);
+    printf("Livro com ID %d não encontrado!\n", id);
     return 0;
 }
 
@@ -92,7 +90,6 @@ Livro* buscar_livro_por_titulo(ListaLivros* lista, const char* titulo) {
         }
         atual = atual->proximo;
     }
-
     return NULL;
 }
 
@@ -108,12 +105,12 @@ void listar_livros(ListaLivros* lista) {
 
     while (atual != NULL) {
         printf("---------------------------\n");
-        printf("ID       : %d\n", atual->livro.id);
-        printf("Titulo   : %s\n", atual->livro.titulo);
-        printf("Autor    : %s\n", atual->livro.autor);
-        printf("Ano      : %d\n", atual->livro.ano);
-        printf("Paginas  : %d\n", atual->livro.paginas);
-        printf("Status   : %s\n", atual->livro.disponivel ? "Disponivel" : "Emprestado");
+        printf("ID: %d\n", atual->livro.id);
+        printf("Titulo: %s\n", atual->livro.titulo);
+        printf("Autor: %s\n", atual->livro.autor);
+        printf("Ano: %d\n", atual->livro.ano);
+        printf("Paginas: %d\n", atual->livro.paginas);
+        printf("Status: %s\n", atual->livro.disponivel ? "Disponivel" : "Emprestado");
         atual = atual->proximo;
     }
 
@@ -121,17 +118,15 @@ void listar_livros(ListaLivros* lista) {
 }
 
 // Atualiza disponibilidade do livro
-// Retorna 1 se atualizou, 0 se não encontrou
 int atualizar_disponibilidade(ListaLivros* lista, int id, int disponivel) {
     Livro* livro = buscar_livro_por_id(lista, id);
 
     if (livro == NULL) {
-        printf("Livro com ID %d nao encontrado!\n", id);
+        printf("Livro com ID %d não encontrado!\n", id);
         return 0;
     }
 
     livro->disponivel = disponivel;
-    printf("Disponibilidade do livro '%s' atualizada!\n", livro->titulo);
     return 1;
 }
 
@@ -178,7 +173,7 @@ void salvar_livros(ListaLivros* lista, const char* arquivo) {
 void carregar_livros(ListaLivros* lista, const char* arquivo) {
     FILE* fp = fopen(arquivo, "r");
     if (fp == NULL) {
-        printf("Arquivo '%s' nao encontrado. Iniciando lista vazia.\n", arquivo);
+        printf("Arquivo '%s' não encontrado. Iniciando lista vazia.\n", arquivo);
         return;
     }
 
