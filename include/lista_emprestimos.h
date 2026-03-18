@@ -15,7 +15,7 @@ typedef struct NoEmprestimo {
 } NoEmprestimo;
 
 typedef struct ListaEmprestimos {
-    NoEmprestimo* cabeca;
+    NoEmprestimo* head;
     int tamanho;
 } ListaEmprestimos;
 

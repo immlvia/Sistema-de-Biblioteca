@@ -17,7 +17,7 @@ typedef struct NoLivro {
 } NoLivro;
 
 typedef struct ListaLivros {
-    NoLivro* cabeca;
+    NoLivro* head;
     int tamanho;
 } ListaLivros;
 
@@ -33,4 +33,4 @@ void destruir_lista_livros(ListaLivros* lista);
 void salvar_livros(ListaLivros* lista, const char* arquivo);
 int gerarProximoId(ListaLivros *lista);
 void carregar_livros(ListaLivros* lista, const char* arquivo);
-#endif 
+#endif

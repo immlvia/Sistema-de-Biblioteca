@@ -6,7 +6,7 @@
 
 int gerarProximoIdUsuario(ListaUsuarios* lista) {
     int maiorId = 0;
-    NoUsuario* atual = lista->cabeca;
+    NoUsuario* atual = lista->head;
 
     while (atual != NULL) {
         if (atual->usuario.id > maiorId) {
@@ -20,7 +20,7 @@ int gerarProximoIdUsuario(ListaUsuarios* lista) {
 
 void inicializar_lista_usuarios(ListaUsuarios* lista) {
     if (lista != NULL) {
-        lista->cabeca = NULL;
+        lista->head = NULL;
         lista->tamanho = 0;
     }
 }
@@ -30,13 +30,13 @@ void inserir_usuario(ListaUsuarios* lista, Usuario usuario) {
     if (novo == NULL) return;
 
     novo->usuario = usuario;
-    novo->proximo = lista->cabeca;
-    lista->cabeca = novo;
+    novo->proximo = lista->head;
+    lista->head = novo;
     lista->tamanho++;
 }
 
 int remover_usuario(ListaUsuarios* lista, int id) {
-    NoUsuario* atual = lista->cabeca;
+    NoUsuario* atual = lista->head;
     NoUsuario* anterior = NULL;
 
     while (atual != NULL && atual->usuario.id != id) {
@@ -50,7 +50,7 @@ int remover_usuario(ListaUsuarios* lista, int id) {
     }
 
     if (anterior == NULL) {
-        lista->cabeca = atual->proximo;
+        lista->head = atual->proximo;
     } else {
         anterior->proximo = atual->proximo;
     }
@@ -62,7 +62,7 @@ int remover_usuario(ListaUsuarios* lista, int id) {
 }
 
 Usuario* buscar_usuario_por_id(ListaUsuarios* lista, int id) {
-    NoUsuario* atual = lista->cabeca;
+    NoUsuario* atual = lista->head;
 
     while (atual != NULL) {
         if (atual->usuario.id == id) {
@@ -75,7 +75,7 @@ Usuario* buscar_usuario_por_id(ListaUsuarios* lista, int id) {
 }
 
 Usuario* buscar_usuario_por_nome(ListaUsuarios* lista, const char* nome) {
-    NoUsuario* atual = lista->cabeca;
+    NoUsuario* atual = lista->head;
 
     while (atual != NULL) {
         if (strcmp(atual->usuario.nome, nome) == 0) {
@@ -88,7 +88,7 @@ Usuario* buscar_usuario_por_nome(ListaUsuarios* lista, const char* nome) {
 }
 
 void listar_usuarios(ListaUsuarios* lista) {
-    NoUsuario* atual = lista->cabeca;
+    NoUsuario* atual = lista->head;
 
     if (atual == NULL) {
         printf("Nenhum usuário cadastrado.\n");
@@ -108,7 +108,7 @@ void listar_usuarios(ListaUsuarios* lista) {
 void destruir_lista_usuarios(ListaUsuarios* lista) {
     if (lista == NULL) return;
 
-    NoUsuario* atual = lista->cabeca;
+    NoUsuario* atual = lista->head;
     NoUsuario* proximo;
 
     while (atual != NULL) {
@@ -117,7 +117,7 @@ void destruir_lista_usuarios(ListaUsuarios* lista) {
         atual = proximo;
     }
 
-    lista->cabeca = NULL;
+    lista->head = NULL;
     lista->tamanho = 0;
 }
 
@@ -125,7 +125,7 @@ void salvar_usuarios(ListaUsuarios* lista, const char* arquivo) {
     FILE* f = fopen(arquivo, "w");
     if (f == NULL) return;
 
-    NoUsuario* atual = lista->cabeca;
+    NoUsuario* atual = lista->head;
     while (atual != NULL) {
         fprintf(f, "%d|%s\n",
             atual->usuario.id,

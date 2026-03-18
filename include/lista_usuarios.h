@@ -12,7 +12,7 @@ typedef struct NoUsuario {
 } NoUsuario;
 
 typedef struct ListaUsuarios {
-    NoUsuario* cabeca;
+    NoUsuario* head;
     int tamanho;
 } ListaUsuarios;
 

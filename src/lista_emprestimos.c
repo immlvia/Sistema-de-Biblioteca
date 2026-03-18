@@ -5,7 +5,7 @@
 
 int gerarProximoIdEmprestimo(ListaEmprestimos* lista) {
     int maiorId = 0;
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
     while (atual != NULL) {
         if (atual->emprestimo.id > maiorId)
             maiorId = atual->emprestimo.id;
@@ -16,7 +16,7 @@ int gerarProximoIdEmprestimo(ListaEmprestimos* lista) {
 
 // Inicializa a lista
 void inicializar_lista_emprestimos(ListaEmprestimos* lista){
-    lista->cabeca = NULL;
+    lista->head = NULL;
     lista->tamanho = 0;
 }
 
@@ -29,21 +29,21 @@ void inserir_emprestimo(ListaEmprestimos* lista, Emprestimo emprestimo) {
     }
 
     novo->emprestimo = emprestimo;
-    novo->proximo = lista->cabeca;
-    lista->cabeca = novo;
+    novo->proximo = lista->head;
+    lista->head = novo;
     lista->tamanho++;
 }
 
 // Remove um empréstimo pelo ID
 // Retorna 1 se removeu, 0 se não encontrou
 int remover_emprestimo(ListaEmprestimos* lista, int id) {
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
     NoEmprestimo* anterior = NULL;
 
     while (atual != NULL) {
         if (atual->emprestimo.id == id) {
             if (anterior == NULL) {
-                lista->cabeca = atual->proximo;
+                lista->head = atual->proximo;
             } else {
                 anterior->proximo = atual->proximo;
             }
@@ -62,7 +62,7 @@ int remover_emprestimo(ListaEmprestimos* lista, int id) {
 // Busca empréstimo pelo ID
 // Retorna ponteiro para o empréstimo ou NULL
 Emprestimo* buscar_emprestimo_por_id(ListaEmprestimos* lista, int id) {
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
 
     while (atual != NULL) {
         if (atual->emprestimo.id == id) {
@@ -77,7 +77,7 @@ Emprestimo* buscar_emprestimo_por_id(ListaEmprestimos* lista, int id) {
 // Busca o primeiro empréstimo ativo de um usuário
 // Retorna ponteiro para o empréstimo ou NULL
 Emprestimo* buscar_emprestimo_por_usuario(ListaEmprestimos* lista, int id_usuario) {
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
 
     while (atual != NULL) {
         if (atual->emprestimo.id_usuario == id_usuario) {
@@ -92,7 +92,7 @@ Emprestimo* buscar_emprestimo_por_usuario(ListaEmprestimos* lista, int id_usuari
 // Busca o empréstimo ativo de um livro
 // Retorna ponteiro para o empréstimo ou NULL
 Emprestimo* buscar_emprestimo_por_livro(ListaEmprestimos* lista, int id_livro) {
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
 
     while (atual != NULL) {
         if (atual->emprestimo.id_livro == id_livro) {
@@ -106,12 +106,12 @@ Emprestimo* buscar_emprestimo_por_livro(ListaEmprestimos* lista, int id_livro) {
 
 // Lista todos os empréstimos
 void listar_emprestimos(ListaEmprestimos* lista) {
-    if (lista->cabeca == NULL) {
+    if (lista->head == NULL) {
         printf("Nenhum empréstimo registrado!\n");
         return;
     }
 
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
     printf("\n===== LISTA DE EMPRESTIMOS (%d) =====\n", lista->tamanho);
 
     while (atual != NULL) {
@@ -129,7 +129,7 @@ void listar_emprestimos(ListaEmprestimos* lista) {
 
 // Libera toda a memória da lista
 void destruir_lista_emprestimos(ListaEmprestimos* lista) {
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
 
     while (atual != NULL) {
         NoEmprestimo* proximo = atual->proximo;
@@ -137,7 +137,7 @@ void destruir_lista_emprestimos(ListaEmprestimos* lista) {
         atual = proximo;
     }
 
-    lista->cabeca = NULL;
+    lista->head = NULL;
     lista->tamanho = 0;
 }
 
@@ -149,7 +149,7 @@ void salvar_emprestimos(ListaEmprestimos* lista, const char* arquivo) {
         return;
     }
 
-    NoEmprestimo* atual = lista->cabeca;
+    NoEmprestimo* atual = lista->head;
     while (atual != NULL) {
         fprintf(fp, "%d|%d|%d|%s|%s\n",
             atual->emprestimo.id,

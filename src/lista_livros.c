@@ -6,48 +6,48 @@
 // Gerar id do livro
 int gerarProximoId(ListaLivros *lista) {
 
-    NoLivro *atual = lista->cabeca;
-    int maiorId = 0;
+    NoLivro *atual = lista->head; // coloca ponteiro no começo da biblioteca
+    int maiorId = 0; 
 
     while (atual != NULL) {
+        // compara se o ID do nó atual é maior que o valor armazenado em maiorId
+        if (atual->livro.id > maiorId) 
+        maiorId = atual->livro.id; // atualiza a variável com o novo maior valor
 
-        if (atual->livro.id > maiorId)
-        maiorId = atual->livro.id;
-
-        atual = atual->proximo;
+        atual = atual->proximo; // passa pro próximo nó da lista
     }
-    return maiorId + 1;
+    return maiorId + 1; // soma +1 para criar um id único
 }
 // Inicializa a lista
 void inicializar_lista_livros(ListaLivros* lista) {
-    lista->cabeca = NULL;
-    lista->tamanho = 0;
+    lista->head = NULL; // garante que a lista comece vazia e não tenha nenhum lixo na mémoria 
+    lista->tamanho = 0; // inicia o contador de elementos com 0
 }
 
 // Insere um livro no início da lista
 void inserir_livro(ListaLivros* lista, Livro livro) {
-    NoLivro* novo = (NoLivro*) malloc(sizeof(NoLivro));
+    NoLivro* novo = (NoLivro*) malloc(sizeof(NoLivro)); // usa malloc para alocar dinanicamente espaço na memória ram
     if (novo == NULL) {
         printf("Erro: memória insuficiente!\n");
         return;
     }
 
-    novo->livro = livro;
-    novo->proximo = lista->cabeca;
-    lista->cabeca = novo;
-    lista->tamanho++;
+    novo->livro = livro; // colocamos os dados da struct Livro para dentro do novo nó
+    novo->proximo = lista->head; // o novo nó aponta para o atual início da lista (faz o elo)
+    lista->head = novo; // o head passa a ser o novo nó que alocamos
+    lista->tamanho++; 
 }
 
 // Remove um livro pelo ID
 // Retorna 1 se removeu, 0 se não encontrou
 int remover_livro(ListaLivros* lista, int id) {
-    NoLivro* atual = lista->cabeca;
+    NoLivro* atual = lista->head;
     NoLivro* anterior = NULL;
 
     while (atual != NULL) {
         if (atual->livro.id == id) {
             if (anterior == NULL) {
-                lista->cabeca = atual->proximo;
+                lista->head = atual->proximo;
             } else {
                 anterior->proximo = atual->proximo;
             }
@@ -67,7 +67,7 @@ int remover_livro(ListaLivros* lista, int id) {
 // Busca livro pelo ID
 // Retorna ponteiro para o livro ou NULL
 Livro* buscar_livro_por_id(ListaLivros* lista, int id) {
-    NoLivro* atual = lista->cabeca;
+    NoLivro* atual = lista->head;
 
     while (atual != NULL) {
         if (atual->livro.id == id) {
@@ -82,7 +82,7 @@ Livro* buscar_livro_por_id(ListaLivros* lista, int id) {
 // Busca livro pelo título
 // Retorna ponteiro para o livro ou NULL
 Livro* buscar_livro_por_titulo(ListaLivros* lista, const char* titulo) {
-    NoLivro* atual = lista->cabeca;
+    NoLivro* atual = lista->head;
 
     while (atual != NULL) {
         if (strcmp(atual->livro.titulo, titulo) == 0) {
@@ -95,12 +95,12 @@ Livro* buscar_livro_por_titulo(ListaLivros* lista, const char* titulo) {
 
 // Lista todos os livros
 void listar_livros(ListaLivros* lista) {
-    if (lista->cabeca == NULL) {
+    if (lista->head == NULL) {
         printf("Nenhum livro cadastrado!\n");
         return;
     }
 
-    NoLivro* atual = lista->cabeca;
+    NoLivro* atual = lista->head;
     printf("\n===== LISTA DE LIVROS (%d) =====\n", lista->tamanho);
 
     while (atual != NULL) {
@@ -132,15 +132,15 @@ int atualizar_disponibilidade(ListaLivros* lista, int id, int disponivel) {
 
 // Libera toda a memória da lista
 void destruir_lista_livros(ListaLivros* lista) {
-    NoLivro* atual = lista->cabeca;
+    NoLivro* atual = lista->head;
 
     while (atual != NULL) {
-        NoLivro* proximo = atual->proximo;
-        free(atual);
-        atual = proximo;
+        NoLivro* proximo = atual->proximo; // anota endereço do próximo livro com variável temporária (pra não perder o acesso do restante da biblioteca)
+        free(atual); // quando o endereço tiver guardado, faz o free
+        atual = proximo; // vai pro próximo ponteiro que deixamos guardado
     }
 
-    lista->cabeca = NULL;
+    lista->head = NULL;
     lista->tamanho = 0;
 }
 
@@ -152,7 +152,7 @@ void salvar_livros(ListaLivros* lista, const char* arquivo) {
         return;
     }
 
-    NoLivro* atual = lista->cabeca;
+    NoLivro* atual = lista->head;
     while (atual != NULL) {
         fprintf(fp, "%d|%s|%s|%d|%d|%d\n",
             atual->livro.id,
