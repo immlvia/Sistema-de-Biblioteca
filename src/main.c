@@ -240,6 +240,7 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
         opcao = lerInteiro("Digite a opção desejada: ");
 
         switch (opcao) {
+            // Registrar empréstimo
             case 1: {
                 Emprestimo novo;
 
@@ -253,7 +254,7 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
                     printf("Erro: Livro '%s' já está emprestado!\n", livro->titulo);
                     break;
                 }
-
+                // Verifica se o usuário existe
                 novo.id_usuario = lerInteiro("ID do usuário: ");
                 Usuario *usuario = buscar_usuario_por_id(usuarios, novo.id_usuario);
                 if (usuario == NULL) {
@@ -276,6 +277,7 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
                     livro->titulo, usuario->nome);
                 break;
             }
+            // Devolver livro
             case 2: {
                 int id = lerInteiro("ID do emprestimo para devolver: ");
 
@@ -292,27 +294,19 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
                 printf("Livro devolvido com sucesso!\n");
                 break;
             }
+            // Listar empréstimos
             case 3:
                 listar_emprestimos(emprestimos, livros, usuarios);
                 break;
 
+            // Buscar empréstimo por ID 
             case 4: {
-                int id = lerInteiro("ID do empréstimo: ");
-
-                Emprestimo *emp = buscar_emprestimo_por_id(emprestimos, id);
-                if (emp != NULL) {
-                    printf("\n---------------------------\n");
-                    printf("ID: %d\n", emp->id);
-                    printf("ID Livro: %d\n", emp->id_livro);
-                    printf("ID Usuario: %d\n", emp->id_usuario);
-                    printf("Emprestimo: %s\n", emp->data_emprestimo);
-                    printf("Devolução: %s\n", emp->data_devolucao);
-                    printf("---------------------------\n");
-                } else {
-                    printf("Empréstimo com ID %d não encontrado!\n", id);
-                }
+                int id = lerInteiro("ID do usuário: ");
+                listar_emprestimos_por_usuario(emprestimos, id, livros, usuarios);
                 break;
+            
             }
+            // Voltar
             case 0:
                 printf("Voltando ao menu principal...\n");
                 break;

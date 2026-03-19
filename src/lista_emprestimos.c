@@ -5,6 +5,7 @@
 #include "../include/lista_livros.h"
 #include "../include/lista_usuarios.h"
 
+// Gera o próximo ID para um novo empréstimo
 int gerarProximoIdEmprestimo(ListaEmprestimos* lista) {
     int maiorId = 0;
     NoEmprestimo* atual = lista->head;
@@ -115,13 +116,13 @@ void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuar
 
     NoEmprestimo* atual = lista->head;
     printf("\n===== LISTA DE EMPRESTIMOS (%d) =====\n", lista->tamanho);
-
+// Para cada empréstimo, busca o título do livro e o nome do usuário
     while (atual != NULL) {
         printf("---------------------------\n");
         printf("ID: %d\n", atual->emprestimo.id);
         Livro* livro = buscar_livro_por_id(livros, atual->emprestimo.id_livro);
         Usuario* usuario = buscar_usuario_por_id(usuarios, atual->emprestimo.id_usuario);
-
+// Exibe o título do livro e o nome do usuário, ou mensagem de erro se não encontrados
         if (livro != NULL)
             printf("Livro: %s\n", livro->titulo);
         else
@@ -137,6 +138,39 @@ void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuar
     }
 
     printf("=====================================\n\n");
+}
+// Lista empréstimos de um usuário específico
+void listar_emprestimos_por_usuario(ListaEmprestimos* lista, int id_usuario, ListaLivros* livros, ListaUsuarios* usuarios) {
+    NoEmprestimo* atual = lista->head;
+    int encontrou = 0;
+
+    while (atual != NULL) {
+        if (atual->emprestimo.id_usuario == id_usuario) {
+
+            Livro* livro = buscar_livro_por_id(livros, atual->emprestimo.id_livro);
+            Usuario* usuario = buscar_usuario_por_id(usuarios, atual->emprestimo.id_usuario);
+
+            printf("\n---------------------------\n");
+            printf("ID: %d\n", atual->emprestimo.id);
+
+            if (livro != NULL)
+                printf("Livro: %s [%d]\n", livro->titulo, livro->id);
+
+            if (usuario != NULL)
+                printf("Usuário: %s [%d]\n", usuario->nome, usuario->id);
+
+            printf("Emprestimo: %s\n", atual->emprestimo.data_emprestimo);
+            printf("Devolucao: %s\n", atual->emprestimo.data_devolucao);
+
+            encontrou = 1;
+        }
+
+        atual = atual->proximo;
+    }
+
+    if (!encontrou) {
+        printf("Nenhum empréstimo encontrado para o usuário!\n");
+    }
 }
 
 // Libera toda a memória da lista
@@ -184,7 +218,7 @@ void carregar_emprestimos(ListaEmprestimos* lista, const char* arquivo) {
         printf("Arquivo '%s' não encontrado. Iniciando lista vazia.\n", arquivo);
         return;
     }
-
+// Lê cada linha do arquivo e insere na lista de empréstimos
     Emprestimo emprestimo;
     while (fscanf(fp, "%d|%d|%d|%10[^|]|%10[^\n]\n",
         &emprestimo.id,
