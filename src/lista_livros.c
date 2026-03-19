@@ -41,22 +41,24 @@ void inserir_livro(ListaLivros* lista, Livro livro) {
 // Remove um livro pelo ID
 // Retorna 1 se removeu, 0 se não encontrou
 int remover_livro(ListaLivros* lista, int id) {
-    NoLivro* atual = lista->head;
-    NoLivro* anterior = NULL;
+    NoLivro* atual = lista->head; // coloca o ponteiro no começo da biblioteca
+    NoLivro* anterior = NULL; // o ponteiro anterior começa com NULL, pois não passamos por nenhum nó
 
     while (atual != NULL) {
-        if (atual->livro.id == id) {
-            if (anterior == NULL) {
-                lista->head = atual->proximo;
+        if (atual->livro.id == id) { // compara se o ID do nó atual é igual ao id que o usuário digitou
+            // caso 1: o livro a ser removido é o primeiro da lista
+            if (anterior == NULL) {   
+                lista->head = atual->proximo; // o head pula o primeiro e passa a apontar para o segundo nó 
+            // caso 2: se o id estiver no meio ou final da lista
             } else {
-                anterior->proximo = atual->proximo;
+                anterior->proximo = atual->proximo; // o nó anterior pula o atual e faz o elo com o próximo da lista
             }
-            free(atual);
-            lista->tamanho--;
+            free(atual); // devolve a memória para o sistema
+            lista->tamanho--; 
             printf("Livro removido com sucesso!\n");
             return 1;
         }
-        anterior = atual;
+        anterior = atual; 
         atual = atual->proximo;
     }
 
@@ -67,42 +69,31 @@ int remover_livro(ListaLivros* lista, int id) {
 // Busca livro pelo ID
 // Retorna ponteiro para o livro ou NULL
 Livro* buscar_livro_por_id(ListaLivros* lista, int id) {
-    NoLivro* atual = lista->head;
+    NoLivro* atual = lista->head; // coloca o ponteiro atual no começo da biblioteca
 
     while (atual != NULL) {
+        // se encontrar o id do livro igual ao que o usuário digitou
         if (atual->livro.id == id) {
-            return &atual->livro;
+            return &atual->livro; // retorna o endereço de memória
         }
-        atual = atual->proximo;
+        atual = atual->proximo; // se não encontrou, atualizo com o endereço do próximo nó
     }
 
-    return NULL;
-}
-
-// Busca livro pelo título
-// Retorna ponteiro para o livro ou NULL
-Livro* buscar_livro_por_titulo(ListaLivros* lista, const char* titulo) {
-    NoLivro* atual = lista->head;
-
-    while (atual != NULL) {
-        if (strcmp(atual->livro.titulo, titulo) == 0) {
-            return &atual->livro;
-        }
-        atual = atual->proximo;
-    }
-    return NULL;
+    return NULL; // se não tiver achado retorna nulo
 }
 
 // Lista todos os livros
 void listar_livros(ListaLivros* lista) {
+    // verifica se a lista está vazia antes de tentar percorrer
     if (lista->head == NULL) {
         printf("Nenhum livro cadastrado!\n");
         return;
     }
 
-    NoLivro* atual = lista->head;
+    NoLivro* atual = lista->head; // coloca o ponteiro atual no começo da biblioteca
     printf("\n===== LISTA DE LIVROS (%d) =====\n", lista->tamanho);
-
+    
+    // enquanto o ponteiro não atingir o final da lista
     while (atual != NULL) {
         printf("---------------------------\n");
         printf("ID: %d\n", atual->livro.id);
@@ -110,8 +101,8 @@ void listar_livros(ListaLivros* lista) {
         printf("Autor: %s\n", atual->livro.autor);
         printf("Ano: %d\n", atual->livro.ano);
         printf("Paginas: %d\n", atual->livro.paginas);
-        printf("Status: %s\n", atual->livro.disponivel ? "Disponivel" : "Emprestado");
-        atual = atual->proximo;
+        printf("Status: %s\n", atual->livro.disponivel ? "Disponivel" : "Emprestado"); // converte valor booleano em texto
+        atual = atual->proximo; // aponta pro endereço do próximo nó da lista
     }
 
     printf("===========================\n\n");
@@ -119,13 +110,14 @@ void listar_livros(ListaLivros* lista) {
 
 // Atualiza disponibilidade do livro
 int atualizar_disponibilidade(ListaLivros* lista, int id, int disponivel) {
+    // busca o endereço de memória do livro específico na biblioteca
     Livro* livro = buscar_livro_por_id(lista, id);
 
     if (livro == NULL) {
         printf("Livro com ID %d não encontrado!\n", id);
         return 0;
     }
-
+    // acessa o endereço do livro e atualiza o campo disponivel com o novo valor
     livro->disponivel = disponivel;
     return 1;
 }
@@ -146,14 +138,16 @@ void destruir_lista_livros(ListaLivros* lista) {
 
 // Salva os livros em arquivo .txt
 void salvar_livros(ListaLivros* lista, const char* arquivo) {
+    // abre um arquivo do tipo ponteiro com W para escrever nossos dados no arquivo .txt
     FILE* fp = fopen(arquivo, "w");
     if (fp == NULL) {
         printf("Erro ao abrir arquivo '%s' para escrita!\n", arquivo);
         return;
     }
-
+    // coloca o ponteiro atual no começo da biblioteca
     NoLivro* atual = lista->head;
     while (atual != NULL) {
+        // usa o fprintf para escrever no arquivo
         fprintf(fp, "%d|%s|%s|%d|%d|%d\n",
             atual->livro.id,
             atual->livro.titulo,
@@ -162,33 +156,37 @@ void salvar_livros(ListaLivros* lista, const char* arquivo) {
             atual->livro.paginas,
             atual->livro.disponivel
         );
+        // move o ponteiro para o próximo nó da lista
         atual = atual->proximo;
     }
-
+    // fecha o arquivo
     fclose(fp);
     printf("Livros salvos em '%s' com sucesso!\n", arquivo);
 }
 
 // Carrega os livros de um arquivo .txt
 void carregar_livros(ListaLivros* lista, const char* arquivo) {
+    // abre o arquivo para leitura com o R
     FILE* fp = fopen(arquivo, "r");
     if (fp == NULL) {
         printf("Arquivo '%s' não encontrado. Iniciando lista vazia.\n", arquivo);
         return;
     }
-
+    // cria uma struct local
     Livro livro;
+    // lê os campos 
     while (fscanf(fp, "%d|%99[^|]|%99[^|]|%d|%d|%d\n",
         &livro.id,
         livro.titulo,
         livro.autor,
         &livro.ano,
         &livro.paginas,
-        &livro.disponivel) == 6)
+        &livro.disponivel) == 6) // verefica se os seis campos estão todos lá
     {
+        //usa a função inserir para colocar tudo na memória RAM de novo
         inserir_livro(lista, livro);
     }
-
+    // fecha o arquivo
     fclose(fp);
     printf("Livros carregados de '%s' com sucesso!\n", arquivo);
-}
+} 

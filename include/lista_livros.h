@@ -26,7 +26,6 @@ void inicializar_lista_livros(ListaLivros* lista);
 void inserir_livro(ListaLivros* lista, Livro livro);
 int remover_livro(ListaLivros* lista, int id);
 Livro* buscar_livro_por_id(ListaLivros* lista, int id);
-Livro* buscar_livro_por_titulo(ListaLivros* lista, const char* titulo);
 void listar_livros(ListaLivros* lista);
 int atualizar_disponibilidade(ListaLivros* lista, int id, int disponivel);
 void destruir_lista_livros(ListaLivros* lista);
