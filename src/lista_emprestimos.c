@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/lista_emprestimos.h"
+#include "../include/lista_livros.h"
+#include "../include/lista_usuarios.h"
 
 int gerarProximoIdEmprestimo(ListaEmprestimos* lista) {
     int maiorId = 0;
@@ -105,7 +107,7 @@ Emprestimo* buscar_emprestimo_por_livro(ListaEmprestimos* lista, int id_livro) {
 }
 
 // Lista todos os empréstimos
-void listar_emprestimos(ListaEmprestimos* lista) {
+void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuarios* usuarios) {
     if (lista->head == NULL) {
         printf("Nenhum empréstimo registrado!\n");
         return;
@@ -117,8 +119,18 @@ void listar_emprestimos(ListaEmprestimos* lista) {
     while (atual != NULL) {
         printf("---------------------------\n");
         printf("ID: %d\n", atual->emprestimo.id);
-        printf("ID Livro: %d\n", atual->emprestimo.id_livro);
-        printf("ID Usuario: %d\n", atual->emprestimo.id_usuario);
+        Livro* livro = buscar_livro_por_id(livros, atual->emprestimo.id_livro);
+        Usuario* usuario = buscar_usuario_por_id(usuarios, atual->emprestimo.id_usuario);
+
+        if (livro != NULL)
+            printf("Livro: %s\n", livro->titulo);
+        else
+            printf("Livro: Não encontrado\n");
+
+        if (usuario != NULL)
+            printf("Usuário: %s\n", usuario->nome);
+        else
+            printf("Usuário: Não encontrado\n");
         printf("Emprestimo: %s\n", atual->emprestimo.data_emprestimo);
         printf("Devolucao: %s\n", atual->emprestimo.data_devolucao);
         atual = atual->proximo;

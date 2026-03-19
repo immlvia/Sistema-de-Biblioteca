@@ -293,7 +293,7 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
                 break;
             }
             case 3:
-                listar_emprestimos(emprestimos);
+                listar_emprestimos(emprestimos, livros, usuarios);
                 break;
 
             case 4: {

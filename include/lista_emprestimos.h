@@ -1,5 +1,7 @@
 #ifndef LISTA_EMPRESTIMOS_H
 #define LISTA_EMPRESTIMOS_H
+#include "lista_livros.h"
+#include "lista_usuarios.h"
 
 typedef struct Emprestimo {
     int id;
@@ -26,7 +28,7 @@ int remover_emprestimo(ListaEmprestimos* lista, int id);
 Emprestimo* buscar_emprestimo_por_id(ListaEmprestimos* lista, int id);
 Emprestimo* buscar_emprestimo_por_usuario(ListaEmprestimos* lista, int id_usuario);
 Emprestimo* buscar_emprestimo_por_livro(ListaEmprestimos* lista, int id_livro);
-void listar_emprestimos(ListaEmprestimos* lista);
+void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuarios* usuarios);
 void destruir_lista_emprestimos(ListaEmprestimos* lista);
 void salvar_emprestimos(ListaEmprestimos* lista, const char* arquivo);
 void carregar_emprestimos(ListaEmprestimos* lista, const char* arquivo);
