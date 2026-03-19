@@ -1,37 +1,126 @@
 # Sistema-de-Biblioteca
 
-
-Projeto desenvolvido em linguagem C para gerenciamento de uma biblioteca, utilizando estruturas de dados (listas encadeadas) para armazenar **livros**, **usuários** e **empréstimos**.
-
----
-
-## 🚀 Funcionalidades
-
-### 📖 Livros
-
-* Cadastrar livros
-* Listar livros
-* Buscar livro por ID
-* Remover livro (somente se disponível)
-* Controle de disponibilidade
-
-### 👤 Usuários
-
-* Cadastrar usuários
-* Listar usuários
-* Buscar por ID ou nome
-* Remover usuário (somente se não possuir empréstimos ativos)
-
-### 🔄 Empréstimos
-
-* Registrar empréstimos
-* Devolver livros
-* Listar empréstimos
-* Buscar empréstimo por ID
+O Sistema de Biblioteca é uma aplicação desenvolvida em linguagem C que permite o gerenciamento de livros, usuários e empréstimos. O sistema utiliza listas encadeadas para armazenar dados em memória e arquivos `.txt` para persistência, possibilitando o controle de cadastros, empréstimos e devoluções de forma simples e eficiente.
 
 ---
 
-## 🗂️ Estrutura do Projeto
+## Instalação e Configuração
+
+### Pré-requisitos
+
+* Compilador C (gcc recomendado)
+* Sistema operacional Linux, macOS ou Windows (com terminal compatível)
+* Make (opcional, mas recomendado)
+
+---
+
+## Passos para instalação
+
+### Clone o repositório
+
+```bash
+git clone <URL-do-repositorio>
+cd Sistema-de-Biblioteca
+```
+
+---
+
+### Compile o projeto
+
+#### Usando Makefile (recomendado)
+
+```bash
+make
+```
+
+#### Compilação manual
+
+```bash
+gcc -Wall -Iinclude src/main.c src/lista_livros.c src/lista_usuarios.c src/lista_emprestimos.c -o biblioteca
+```
+
+---
+
+## Executando o projeto
+
+### Inicie o sistema
+
+```bash
+./biblioteca
+```
+
+---
+
+## Persistência de dados
+
+O sistema utiliza arquivos `.txt` localizados na pasta `data/`:
+
+* `livros.txt`
+* `usuarios.txt`
+* `emprestimos.txt`
+
+Caso a pasta não exista, ela será criada automaticamente ao executar o sistema.
+
+---
+
+## Para encerrar a aplicação
+
+Pressione:
+
+```bash
+CTRL + C
+```
+
+ou selecione a opção de sair no menu principal.
+
+---
+
+## Executando em próximas sessões
+
+Sempre que quiser executar o sistema novamente:
+
+```bash
+cd caminho/para/Sistema-de-Biblioteca
+./biblioteca
+```
+
+---
+
+## Funcionalidades
+
+### Livros
+
+* Cadastro de livros
+* Listagem de livros
+* Busca por ID
+* Remoção (apenas se disponível)
+
+### Usuários
+
+* Cadastro de usuários
+* Listagem
+* Busca por ID ou nome
+* Remoção (apenas sem empréstimos ativos)
+
+### Empréstimos
+
+* Registro de empréstimos
+* Devolução de livros
+* Listagem de empréstimos
+* Busca por ID
+
+---
+
+## Regras do Sistema
+
+* Um livro não pode ser removido se estiver emprestado
+* Um usuário não pode ser removido se possuir empréstimos ativos
+* IDs são gerados automaticamente
+* O caractere `|` não pode ser utilizado nos campos de entrada
+
+---
+
+## Estrutura do Projeto
 
 ```
 Sistema-de-Biblioteca/
@@ -58,76 +147,20 @@ Sistema-de-Biblioteca/
 
 ---
 
-## ⚙️ Como compilar
+## Ferramentas para Desenvolvedores
 
-### 🔹 Usando Makefile (recomendado)
-
-```bash
-make
-```
-
-Isso irá gerar o executável:
-
-```
-biblioteca
-```
-
----
-
-### 🔹 Compilação manual
-
-```bash
-gcc -Wall -Iinclude src/main.c src/lista_livros.c src/lista_usuarios.c src/lista_emprestimos.c -o biblioteca
-```
-
----
-
-## ▶️ Como executar
-
-```bash
-./biblioteca
-```
-
----
-
-## 💾 Persistência de Dados
-
-Os dados são salvos automaticamente na pasta `data/`:
-
-* `livros.txt`
-* `usuarios.txt`
-* `emprestimos.txt`
-
-Caso a pasta não exista, o sistema a cria automaticamente.
-
----
-
-## 🧠 Tecnologias e Conceitos Utilizados
+O projeto foi desenvolvido utilizando:
 
 * Linguagem C
 * Listas encadeadas
-* Alocação dinâmica de memória (`malloc` / `free`)
+* Alocação dinâmica de memória (`malloc` e `free`)
 * Manipulação de arquivos (`fopen`, `fprintf`, `fscanf`)
-* Modularização com `.h` e `.c`
 
 ---
 
-## ⚠️ Regras do Sistema
+## Observações
 
-* Um livro não pode ser removido se estiver emprestado
-* Um usuário não pode ser removido se tiver empréstimos ativos
-* IDs são gerados automaticamente
-* Campos não aceitam o caractere `|` (usado como separador nos arquivos)
+O sistema armazena apenas os IDs nos registros de empréstimos, utilizando buscas nas listas de livros e usuários para exibir informações completas (nome e título). Essa abordagem evita redundância e mantém a consistência dos dados.
 
 ---
-
-## 📌 Observações
-
-* O sistema armazena apenas IDs nos empréstimos, buscando dinamicamente os dados de livros e usuários para exibição
-* Isso evita duplicação de dados e mantém consistência
-
----
-
-
-
 
