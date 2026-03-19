@@ -139,6 +139,30 @@ void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuar
 
     printf("=====================================\n\n");
 }
+void calcular_data_devolucao(char* data_emprestimo, char* data_devolucao) {
+    int d, m, a;
+
+    sscanf(data_emprestimo, "%d/%d/%d", &d, &m, &a);
+
+    d += 7;
+
+    // dias por mês (simplificado)
+    int dias_mes[] = {31,28,31,30,31,30,31,31,30,31,30,31};
+
+    // ajuste se passar do mês
+    if (d > dias_mes[m-1]) {
+        d -= dias_mes[m-1];
+        m++;
+
+        if (m > 12) {
+            m = 1;
+            a++;
+        }
+    }
+
+    sprintf(data_devolucao, "%02d/%02d/%d", d, m, a);
+}
+
 // Lista empréstimos de um usuário específico
 void listar_emprestimos_por_usuario(ListaEmprestimos* lista, int id_usuario, ListaLivros* livros, ListaUsuarios* usuarios) {
     NoEmprestimo* atual = lista->head;

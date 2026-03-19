@@ -265,8 +265,9 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
                 printf("Data de empréstimo (DD/MM/AAAA): ");
                 scanf(" %[^\n]", novo.data_emprestimo);
 
-                printf("Data de devolução (DD/MM/AAAA): ");
-                scanf(" %[^\n]", novo.data_devolucao);
+                calcular_data_devolucao(novo.data_emprestimo, novo.data_devolucao);
+
+                printf("Data de devolução automática: %s\n", novo.data_devolucao);
 
                 novo.id = gerarProximoIdEmprestimo(emprestimos);
 
