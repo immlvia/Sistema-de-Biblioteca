@@ -27,13 +27,11 @@ void inserir_emprestimo(ListaEmprestimos* lista, Emprestimo emprestimo);
 int remover_emprestimo(ListaEmprestimos* lista, int id);
 Emprestimo* buscar_emprestimo_por_id(ListaEmprestimos* lista, int id);
 Emprestimo* buscar_emprestimo_por_usuario(ListaEmprestimos* lista, int id_usuario);
-Emprestimo* buscar_emprestimo_por_livro(ListaEmprestimos* lista, int id_livro);
 void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuarios* usuarios);
 void destruir_lista_emprestimos(ListaEmprestimos* lista);
 void salvar_emprestimos(ListaEmprestimos* lista, const char* arquivo);
 void carregar_emprestimos(ListaEmprestimos* lista, const char* arquivo);
 void listar_emprestimos_por_usuario(ListaEmprestimos* lista, int id_usuario, ListaLivros* livros, ListaUsuarios* usuarios);
 void calcular_data_devolucao(char* data_emprestimo, char* data_devolucao);
-int validar_formato_data(const char* data);
 
 #endif 

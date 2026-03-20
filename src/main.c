@@ -5,13 +5,13 @@
 #include "../include/lista_usuarios.h"
 #include "../include/lista_emprestimos.h"
 
-// limpa o buffer do teclado para evitar que o \n ou caracteres extras
+// Limpa o buffer do teclado para evitar que o \n ou caracteres extras
 void limparBuffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF); // lê cada caractere até encontrar o fim da linha ou o fim do arquivo
 }
 
-// garante que o usuário digite apenas números inteiros
+// Garante que o usuário digite apenas números inteiros
 int lerInteiro(const char *mensagem) {
     int valor;
     while (1) {
@@ -68,10 +68,12 @@ void menuLivros(ListaLivros *lista) {
         opcao = lerInteiro("Digite a opção desejada: ");
 
         switch (opcao) {
+            // cadastrar livro
             case 1: {
                 Livro l;
                 l.id = gerarProximoId(lista);
-
+                
+                // força o usuário digitar até que o título não tenha "|"
                 do {
                     printf("Titulo: ");
                     scanf(" %[^\n]", l.titulo);
@@ -95,12 +97,15 @@ void menuLivros(ListaLivros *lista) {
                 break;
             }
             case 2:
+                // lista os livros
                 listar_livros(lista);
                 break;
 
             case 3: {
+                // busca por id
                 int id = lerInteiro("Digite o ID do livro: ");
 
+                // retorna o endereço do livro 
                 Livro *encontrado = buscar_livro_por_id(lista, id);
                 if (encontrado != NULL) {
                     printf("\n---------------------------\n");
@@ -117,6 +122,7 @@ void menuLivros(ListaLivros *lista) {
                 break;
             }
             case 4: {
+                // remoção de livro
                 int id = lerInteiro("ID do livro para remover: ");
 
                 Livro *livro = buscar_livro_por_id(lista, id);
@@ -124,6 +130,7 @@ void menuLivros(ListaLivros *lista) {
                     printf("Livro com ID %d não encontrado!\n", id);
                     break;
                 }
+                // se o campo disponível for igual a 0, não podemos remover
                 if (livro->disponivel == 0) {
                     printf("Erro: Livro '%s' está emprestado e não pode ser removido!\n", livro->titulo);
                     break;
@@ -238,7 +245,7 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
         printf("1 - Registrar empréstimo\n");
         printf("2 - Devolver livro\n");
         printf("3 - Listar empréstimos\n");
-        printf("4 - Buscar empréstimo por ID\n");
+        printf("4 - Buscar empréstimo por usuário\n");
         printf("0 - Voltar\n");
         opcao = lerInteiro("Digite a opção desejada: ");
 
