@@ -5,17 +5,18 @@
 #include "../include/lista_usuarios.h"
 #include "../include/lista_emprestimos.h"
 
-// Limpa o buffer do teclado após entrada inválida
+// limpa o buffer do teclado para evitar que o \n ou caracteres extras
 void limparBuffer() {
     int c;
-    while ((c = getchar()) != '\n' && c != EOF);
+    while ((c = getchar()) != '\n' && c != EOF); // lê cada caractere até encontrar o fim da linha ou o fim do arquivo
 }
 
-// Lê inteiro com validação para evitar loop infinito
+// garante que o usuário digite apenas números inteiros
 int lerInteiro(const char *mensagem) {
     int valor;
     while (1) {
         printf("%s", mensagem);
+        // scanf retorna 1 se conseguir ler o número inteiro
         if (scanf("%d", &valor) == 1) {
             limparBuffer();
             return valor;
@@ -28,26 +29,28 @@ int lerInteiro(const char *mensagem) {
 // Verifica se string contém o caractere '|'
 int contemPipe(const char *str) {
     for (int i = 0; str[i] != '\0'; i++) {
-        if (str[i] == '|') return 1;
+        if (str[i] == '|') return 1; // retorna 1 se encontrar o caractere |
     }
-    return 0;
+    return 0; // retorna 0 se tiver tudo certo
 }
 
 int apenasLetras(const char *str) {
     for (int i = 0; str[i] != '\0'; i++) {
+        // verifica se o caractere está fora do intervalo A-Z ou a-z e não é espaço
         if (!((str[i] >= 'a' && str[i] <= 'z') ||
               (str[i] >= 'A' && str[i] <= 'Z') ||
                str[i] == ' '))
-            return 0;
+            return 0; // retorna 0 se encontrar algo que não é letra
     }
     return 1;
 }
 
 // Cria a pasta data/ automaticamente se não existir
 void criarPastaData() {
+    // se a função stat não encontrar a pasta, retorna -1
     struct stat st = {0};
     if (stat("data", &st) == -1) {
-        mkdir("data", 0700);
+        mkdir("data", 0700); // cria a pasta
     }
 }
 
