@@ -246,7 +246,7 @@ void menuEmprestimos(ListaLivros *livros, ListaUsuarios *usuarios, ListaEmpresti
             // Registrar empréstimo
             case 1: {
                 Emprestimo novo;
-
+                
                 novo.id_livro = lerInteiro("ID do livro: ");
                 Livro *livro = buscar_livro_por_id(livros, novo.id_livro);
                 if (livro == NULL) {

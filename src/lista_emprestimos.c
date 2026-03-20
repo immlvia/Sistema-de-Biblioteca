@@ -92,20 +92,6 @@ Emprestimo* buscar_emprestimo_por_usuario(ListaEmprestimos* lista, int id_usuari
     return NULL;
 }
 
-// Busca o empréstimo ativo de um livro
-// Retorna ponteiro para o empréstimo ou NULL
-Emprestimo* buscar_emprestimo_por_livro(ListaEmprestimos* lista, int id_livro) {
-    NoEmprestimo* atual = lista->head;
-
-    while (atual != NULL) {
-        if (atual->emprestimo.id_livro == id_livro) {
-            return &atual->emprestimo;
-        }
-        atual = atual->proximo;
-    }
-
-    return NULL;
-}
 
 // Lista todos os empréstimos
 void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuarios* usuarios) {
@@ -139,11 +125,12 @@ void listar_emprestimos(ListaEmprestimos* lista, ListaLivros* livros, ListaUsuar
 
     printf("=====================================\n\n");
 }
+
 void calcular_data_devolucao(char* data_emprestimo, char* data_devolucao) {
     int d, m, a;
 
     sscanf(data_emprestimo, "%d/%d/%d", &d, &m, &a);
-
+    // 7 dias é o tempo de emprestimo
     d += 7;
 
     // dias por mês (simplificado)
@@ -165,12 +152,19 @@ void calcular_data_devolucao(char* data_emprestimo, char* data_devolucao) {
 
 // Lista empréstimos de um usuário específico
 void listar_emprestimos_por_usuario(ListaEmprestimos* lista, int id_usuario, ListaLivros* livros, ListaUsuarios* usuarios) {
+    
+    // Ponteiro usado para percorrer a lista encadeada
     NoEmprestimo* atual = lista->head;
-    int encontrou = 0;
 
+    int encontrou = 0; // Flag para verificar se algum empréstimo foi encontrado
+
+    // Percorre todos os nós da lista
     while (atual != NULL) {
+
+        // Filtra apenas empréstimos do usuário informado
         if (atual->emprestimo.id_usuario == id_usuario) {
 
+            // Busca informações relacionadas usando IDs armazenados no nó
             Livro* livro = buscar_livro_por_id(livros, atual->emprestimo.id_livro);
             Usuario* usuario = buscar_usuario_por_id(usuarios, atual->emprestimo.id_usuario);
 
@@ -189,9 +183,11 @@ void listar_emprestimos_por_usuario(ListaEmprestimos* lista, int id_usuario, Lis
             encontrou = 1;
         }
 
+        // Avança para o próximo nó da lista (essencial em listas encadeadas)
         atual = atual->proximo;
     }
 
+    // Caso nenhum empréstimo tenha sido encontrado
     if (!encontrou) {
         printf("Nenhum empréstimo encontrado para o usuário!\n");
     }

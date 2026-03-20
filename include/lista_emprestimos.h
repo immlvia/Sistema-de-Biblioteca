@@ -35,4 +35,5 @@ void carregar_emprestimos(ListaEmprestimos* lista, const char* arquivo);
 void listar_emprestimos_por_usuario(ListaEmprestimos* lista, int id_usuario, ListaLivros* livros, ListaUsuarios* usuarios);
 void calcular_data_devolucao(char* data_emprestimo, char* data_devolucao);
 int validar_formato_data(const char* data);
+
 #endif 
